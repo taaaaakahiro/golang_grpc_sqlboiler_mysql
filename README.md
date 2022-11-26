@@ -5,7 +5,7 @@
 protoc: libprotoc 3.21.6
 ```
 
-## Path
+## Init Path
 ```
 $ export PATH="$PATH:$(go env GOPATH)/bin"
 ```
@@ -18,7 +18,7 @@ $ protoc --go_out=../grpc --go_opt=paths=source_relative \
 	main.proto
 ```
 
-## Install
+## brew install
  - grpcurl
 
 ## grpcurl ~ on runnning grpc server ~
