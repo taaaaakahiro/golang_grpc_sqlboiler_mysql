@@ -7,7 +7,7 @@ import (
 
 type Server struct {
 	repo *persistence.Repositories
-	grpcpb.UnimplementedGreetingServiceServer
+	grpcpb.UnimplementedUserServiceServer
 }
 
 func NewServer(r *persistence.Repositories) (*Server, error) {

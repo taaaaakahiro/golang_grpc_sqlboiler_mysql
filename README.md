@@ -24,6 +24,6 @@ $ protoc --go_out=../grpc --go_opt=paths=source_relative \
 ## grpcurl ~ on runnning grpc server ~
 ```
 $ grpcurl -plaintext localhost:8080 list // list service
-$ grpcurl -plaintext localhost:8080 list grpcapp.GreetingService // list method
-$ grpcurl -plaintext -d '{"name": "1"}' localhost:8080 grpcapp.GreetingService.Hello // request
+$ grpcurl -plaintext localhost:8080 list grpcapp.UserService // list method
+$ grpcurl -plaintext -d '{"id": "1"}' localhost:8080 grpcapp.UserService.User // request
 ```

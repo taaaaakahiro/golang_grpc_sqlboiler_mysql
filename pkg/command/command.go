@@ -72,7 +72,7 @@ func run(ctx context.Context) int {
 	}
 
 	// register gRPC method
-	grpcpb.RegisterGreetingServiceServer(s, servers)
+	grpcpb.RegisterUserServiceServer(s, servers)
 
 	reflection.Register(s)
 

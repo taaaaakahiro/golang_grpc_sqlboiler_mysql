@@ -18,88 +18,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// GreetingServiceClient is the client API for GreetingService service.
+// UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GreetingServiceClient interface {
-	// サービスが持つメソッドの定義
-	Hello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
+type UserServiceClient interface {
+	User(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserResponse, error)
 }
 
-type greetingServiceClient struct {
+type userServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGreetingServiceClient(cc grpc.ClientConnInterface) GreetingServiceClient {
-	return &greetingServiceClient{cc}
+func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
+	return &userServiceClient{cc}
 }
 
-func (c *greetingServiceClient) Hello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error) {
-	out := new(HelloResponse)
-	err := c.cc.Invoke(ctx, "/grpcapp.GreetingService/Hello", in, out, opts...)
+func (c *userServiceClient) User(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, "/grpcapp.UserService/User", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// GreetingServiceServer is the server API for GreetingService service.
-// All implementations must embed UnimplementedGreetingServiceServer
+// UserServiceServer is the server API for UserService service.
+// All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
-type GreetingServiceServer interface {
-	// サービスが持つメソッドの定義
-	Hello(context.Context, *HelloRequest) (*HelloResponse, error)
-	mustEmbedUnimplementedGreetingServiceServer()
+type UserServiceServer interface {
+	User(context.Context, *UserRequest) (*UserResponse, error)
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-// UnimplementedGreetingServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedGreetingServiceServer struct {
+// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedGreetingServiceServer) Hello(context.Context, *HelloRequest) (*HelloResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Hello not implemented")
+func (UnimplementedUserServiceServer) User(context.Context, *UserRequest) (*UserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method User not implemented")
 }
-func (UnimplementedGreetingServiceServer) mustEmbedUnimplementedGreetingServiceServer() {}
+func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
-// UnsafeGreetingServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GreetingServiceServer will
+// UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UserServiceServer will
 // result in compilation errors.
-type UnsafeGreetingServiceServer interface {
-	mustEmbedUnimplementedGreetingServiceServer()
+type UnsafeUserServiceServer interface {
+	mustEmbedUnimplementedUserServiceServer()
 }
 
-func RegisterGreetingServiceServer(s grpc.ServiceRegistrar, srv GreetingServiceServer) {
-	s.RegisterService(&GreetingService_ServiceDesc, srv)
+func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
+	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _GreetingService_Hello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _UserService_User_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GreetingServiceServer).Hello(ctx, in)
+		return srv.(UserServiceServer).User(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcapp.GreetingService/Hello",
+		FullMethod: "/grpcapp.UserService/User",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreetingServiceServer).Hello(ctx, req.(*HelloRequest))
+		return srv.(UserServiceServer).User(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// GreetingService_ServiceDesc is the grpc.ServiceDesc for GreetingService service.
+// UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var GreetingService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpcapp.GreetingService",
-	HandlerType: (*GreetingServiceServer)(nil),
+var UserService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "grpcapp.UserService",
+	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Hello",
-			Handler:    _GreetingService_Hello_Handler,
+			MethodName: "User",
+			Handler:    _UserService_User_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
