@@ -13,3 +13,8 @@ services:
     # - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - 33061:3306
+  
+  app:
+    build: .
+    depends_on:
+      - db
