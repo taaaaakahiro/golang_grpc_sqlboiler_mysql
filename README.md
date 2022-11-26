@@ -3,8 +3,6 @@
 ## Version
 ```
 protoc: libprotoc 3.21.6
-
-
 ```
 
 ## Generate Protocol Buffer
