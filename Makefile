@@ -1,5 +1,6 @@
 run:
 	go run ./pkg/server/main.go
 
-protoc:
+sqlboiler:
+	sqlboiler mysql -c sqlboiler.toml -o ./pkg/server/models --no-tests
 	

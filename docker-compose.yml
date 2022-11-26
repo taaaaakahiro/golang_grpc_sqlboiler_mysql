@@ -14,7 +14,7 @@ services:
     ports:
       - 33061:3306
   
-  app:
-    build: .
-    depends_on:
-      - db
+  # app:
+  #   build: .
+  #   depends_on:
+  #     - db
