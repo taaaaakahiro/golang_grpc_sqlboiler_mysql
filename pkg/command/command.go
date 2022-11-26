@@ -11,6 +11,7 @@ import (
 	"os/signal"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -43,6 +44,7 @@ func run(ctx context.Context) {
 	// 2. gRPCサーバーを作成
 	s := grpc.NewServer()
 
+	reflection.Register(s)
 	// 3. 作成したgRPCサーバーを、8080番ポートで稼働させる
 	go func() {
 		log.Printf("start gRPC server port: %v", cfg.Port)

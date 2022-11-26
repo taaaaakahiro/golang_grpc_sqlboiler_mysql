@@ -1,9 +1,10 @@
 module golang-grpc-sqlboiler-mysql
 
-go 1.18
+go 1.19
 
 require (
 	github.com/friendsofgo/errors v0.9.2
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/sethvargo/go-envconfig v0.8.2
 	github.com/volatiletech/sqlboiler/v4 v4.13.0
 	github.com/volatiletech/strmangle v0.0.4
@@ -12,7 +13,6 @@ require (
 )
 
 require (
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
