@@ -16,9 +16,9 @@ service GreetingService {
 
 // 型の定義
 message HelloRequest {
-	string name = 1;
+	string id = 1;
 }
 
 message HelloResponse {
-	string message = 1;
+	string id = 1;
 }
