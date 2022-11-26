@@ -19,12 +19,11 @@ $ grpcurl -plaintext localhost:8080 list grpcapp.UserService // list method
 ```json
 // request
 $ grpcurl -plaintext -d '{"id": "1"}' localhost:8080 grpcapp.UserService.User
-
 // response
 {
   "id": 1,
-  "name": "hoge",
-  "age": 33
+  "name": "user1",
+  "age": 11
 }
 ```
 
