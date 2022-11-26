@@ -5,10 +5,25 @@
 protoc: libprotoc 3.21.6
 ```
 
+## Path
+```
+$ export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
 ## Generate Protocol Buffer
 ```
 $ cd ./pkg/proto
 $ protoc --go_out=../grpc --go_opt=paths=source_relative \
 	--go-grpc_out=../grpc --go-grpc_opt=paths=source_relative \
 	main.proto
+```
+
+## Install
+ - grpcurl
+
+## grpcurl ~ on runnning grpc server ~
+```
+$ grpcurl -plaintext localhost:8080 list // list service
+$ grpcurl -plaintext localhost:8080 list grpcapp.GreetingService // list method
+$ grpcurl -plaintext -d '{"name": "1"}' localhost:8080 grpcapp.GreetingService.Hello // request
 ```

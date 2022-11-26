@@ -46,9 +46,9 @@ var MUserTableColumns = struct {
 	Name string
 	Age  string
 }{
-	ID:   "m_user.id",
-	Name: "m_user.name",
-	Age:  "m_user.age",
+	ID:   "m_users.id",
+	Name: "m_users.name",
+	Age:  "m_users.age",
 }
 
 // Generated where
@@ -58,9 +58,9 @@ var MUserWhere = struct {
 	Name whereHelperstring
 	Age  whereHelperint
 }{
-	ID:   whereHelperint{field: "`m_user`.`id`"},
-	Name: whereHelperstring{field: "`m_user`.`name`"},
-	Age:  whereHelperint{field: "`m_user`.`age`"},
+	ID:   whereHelperint{field: "`m_users`.`id`"},
+	Name: whereHelperstring{field: "`m_users`.`name`"},
+	Age:  whereHelperint{field: "`m_users`.`age`"},
 }
 
 // MUserRels is where relationship names are stored.
@@ -304,7 +304,7 @@ func (q mUserQuery) One(ctx context.Context, exec boil.ContextExecutor) (*MUser,
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "models: failed to execute a one query for m_user")
+		return nil, errors.Wrap(err, "models: failed to execute a one query for m_users")
 	}
 
 	if err := o.doAfterSelectHooks(ctx, exec); err != nil {
@@ -343,7 +343,7 @@ func (q mUserQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to count m_user rows")
+		return 0, errors.Wrap(err, "models: failed to count m_users rows")
 	}
 
 	return count, nil
@@ -359,7 +359,7 @@ func (q mUserQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return false, errors.Wrap(err, "models: failed to check if m_user exists")
+		return false, errors.Wrap(err, "models: failed to check if m_users exists")
 	}
 
 	return count > 0, nil
@@ -367,10 +367,10 @@ func (q mUserQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool
 
 // MUsers retrieves all the records using an executor.
 func MUsers(mods ...qm.QueryMod) mUserQuery {
-	mods = append(mods, qm.From("`m_user`"))
+	mods = append(mods, qm.From("`m_users`"))
 	q := NewQuery(mods...)
 	if len(queries.GetSelect(q)) == 0 {
-		queries.SetSelect(q, []string{"`m_user`.*"})
+		queries.SetSelect(q, []string{"`m_users`.*"})
 	}
 
 	return mUserQuery{q}
@@ -386,7 +386,7 @@ func FindMUser(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from `m_user` where `id`=?", sel,
+		"select %s from `m_users` where `id`=?", sel,
 	)
 
 	q := queries.Raw(query, iD)
@@ -396,7 +396,7 @@ func FindMUser(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "models: unable to select from m_user")
+		return nil, errors.Wrap(err, "models: unable to select from m_users")
 	}
 
 	if err = mUserObj.doAfterSelectHooks(ctx, exec); err != nil {
@@ -410,7 +410,7 @@ func FindMUser(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 // See boil.Columns.InsertColumnSet documentation to understand column list inference for inserts.
 func (o *MUser) Insert(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) error {
 	if o == nil {
-		return errors.New("models: no m_user provided for insertion")
+		return errors.New("models: no m_users provided for insertion")
 	}
 
 	var err error
@@ -443,15 +443,15 @@ func (o *MUser) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 			return err
 		}
 		if len(wl) != 0 {
-			cache.query = fmt.Sprintf("INSERT INTO `m_user` (`%s`) %%sVALUES (%s)%%s", strings.Join(wl, "`,`"), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
+			cache.query = fmt.Sprintf("INSERT INTO `m_users` (`%s`) %%sVALUES (%s)%%s", strings.Join(wl, "`,`"), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
 		} else {
-			cache.query = "INSERT INTO `m_user` () VALUES ()%s%s"
+			cache.query = "INSERT INTO `m_users` () VALUES ()%s%s"
 		}
 
 		var queryOutput, queryReturning string
 
 		if len(cache.retMapping) != 0 {
-			cache.retQuery = fmt.Sprintf("SELECT `%s` FROM `m_user` WHERE %s", strings.Join(returnColumns, "`,`"), strmangle.WhereClause("`", "`", 0, mUserPrimaryKeyColumns))
+			cache.retQuery = fmt.Sprintf("SELECT `%s` FROM `m_users` WHERE %s", strings.Join(returnColumns, "`,`"), strmangle.WhereClause("`", "`", 0, mUserPrimaryKeyColumns))
 		}
 
 		cache.query = fmt.Sprintf(cache.query, queryOutput, queryReturning)
@@ -468,7 +468,7 @@ func (o *MUser) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 	result, err := exec.ExecContext(ctx, cache.query, vals...)
 
 	if err != nil {
-		return errors.Wrap(err, "models: unable to insert into m_user")
+		return errors.Wrap(err, "models: unable to insert into m_users")
 	}
 
 	var lastID int64
@@ -499,7 +499,7 @@ func (o *MUser) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 	}
 	err = exec.QueryRowContext(ctx, cache.retQuery, identifierCols...).Scan(queries.PtrsFromMapping(value, cache.retMapping)...)
 	if err != nil {
-		return errors.Wrap(err, "models: unable to populate default values for m_user")
+		return errors.Wrap(err, "models: unable to populate default values for m_users")
 	}
 
 CacheNoHooks:
@@ -535,10 +535,10 @@ func (o *MUser) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 			wl = strmangle.SetComplement(wl, []string{"created_at"})
 		}
 		if len(wl) == 0 {
-			return 0, errors.New("models: unable to update m_user, could not build whitelist")
+			return 0, errors.New("models: unable to update m_users, could not build whitelist")
 		}
 
-		cache.query = fmt.Sprintf("UPDATE `m_user` SET %s WHERE %s",
+		cache.query = fmt.Sprintf("UPDATE `m_users` SET %s WHERE %s",
 			strmangle.SetParamNames("`", "`", 0, wl),
 			strmangle.WhereClause("`", "`", 0, mUserPrimaryKeyColumns),
 		)
@@ -558,12 +558,12 @@ func (o *MUser) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 	var result sql.Result
 	result, err = exec.ExecContext(ctx, cache.query, values...)
 	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to update m_user row")
+		return 0, errors.Wrap(err, "models: unable to update m_users row")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by update for m_user")
+		return 0, errors.Wrap(err, "models: failed to get rows affected by update for m_users")
 	}
 
 	if !cached {
@@ -581,12 +581,12 @@ func (q mUserQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 
 	result, err := q.Query.ExecContext(ctx, exec)
 	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to update all for m_user")
+		return 0, errors.Wrap(err, "models: unable to update all for m_users")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to retrieve rows affected for m_user")
+		return 0, errors.Wrap(err, "models: unable to retrieve rows affected for m_users")
 	}
 
 	return rowsAff, nil
@@ -619,7 +619,7 @@ func (o MUserSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := fmt.Sprintf("UPDATE `m_user` SET %s WHERE %s",
+	sql := fmt.Sprintf("UPDATE `m_users` SET %s WHERE %s",
 		strmangle.SetParamNames("`", "`", 0, colNames),
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mUserPrimaryKeyColumns, len(o)))
 
@@ -640,173 +640,6 @@ func (o MUserSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 	return rowsAff, nil
 }
 
-// Delete deletes a single MUser record with an executor.
-// Delete will match against the primary key column to find the record to delete.
-func (o *MUser) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
-	if o == nil {
-		return 0, errors.New("models: no MUser provided for delete")
-	}
-
-	if err := o.doBeforeDeleteHooks(ctx, exec); err != nil {
-		return 0, err
-	}
-
-	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), mUserPrimaryKeyMapping)
-	sql := "DELETE FROM `m_user` WHERE `id`=?"
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, args...)
-	}
-	result, err := exec.ExecContext(ctx, sql, args...)
-	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to delete from m_user")
-	}
-
-	rowsAff, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by delete for m_user")
-	}
-
-	if err := o.doAfterDeleteHooks(ctx, exec); err != nil {
-		return 0, err
-	}
-
-	return rowsAff, nil
-}
-
-// DeleteAll deletes all matching rows.
-func (q mUserQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
-	if q.Query == nil {
-		return 0, errors.New("models: no mUserQuery provided for delete all")
-	}
-
-	queries.SetDelete(q.Query)
-
-	result, err := q.Query.ExecContext(ctx, exec)
-	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to delete all from m_user")
-	}
-
-	rowsAff, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_user")
-	}
-
-	return rowsAff, nil
-}
-
-// DeleteAll deletes all rows in the slice, using an executor.
-func (o MUserSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
-	if len(o) == 0 {
-		return 0, nil
-	}
-
-	if len(mUserBeforeDeleteHooks) != 0 {
-		for _, obj := range o {
-			if err := obj.doBeforeDeleteHooks(ctx, exec); err != nil {
-				return 0, err
-			}
-		}
-	}
-
-	var args []interface{}
-	for _, obj := range o {
-		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mUserPrimaryKeyMapping)
-		args = append(args, pkeyArgs...)
-	}
-
-	sql := "DELETE FROM `m_user` WHERE " +
-		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mUserPrimaryKeyColumns, len(o))
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, args)
-	}
-	result, err := exec.ExecContext(ctx, sql, args...)
-	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to delete all from mUser slice")
-	}
-
-	rowsAff, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_user")
-	}
-
-	if len(mUserAfterDeleteHooks) != 0 {
-		for _, obj := range o {
-			if err := obj.doAfterDeleteHooks(ctx, exec); err != nil {
-				return 0, err
-			}
-		}
-	}
-
-	return rowsAff, nil
-}
-
-// Reload refetches the object from the database
-// using the primary keys with an executor.
-func (o *MUser) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindMUser(ctx, exec, o.ID)
-	if err != nil {
-		return err
-	}
-
-	*o = *ret
-	return nil
-}
-
-// ReloadAll refetches every row with matching primary key column values
-// and overwrites the original object slice with the newly updated slice.
-func (o *MUserSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) error {
-	if o == nil || len(*o) == 0 {
-		return nil
-	}
-
-	slice := MUserSlice{}
-	var args []interface{}
-	for _, obj := range *o {
-		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mUserPrimaryKeyMapping)
-		args = append(args, pkeyArgs...)
-	}
-
-	sql := "SELECT `m_user`.* FROM `m_user` WHERE " +
-		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mUserPrimaryKeyColumns, len(*o))
-
-	q := queries.Raw(sql, args...)
-
-	err := q.Bind(ctx, exec, &slice)
-	if err != nil {
-		return errors.Wrap(err, "models: unable to reload all in MUserSlice")
-	}
-
-	*o = slice
-
-	return nil
-}
-
-// MUserExists checks if the MUser row exists.
-func MUserExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
-	var exists bool
-	sql := "select exists(select 1 from `m_user` where `id`=? limit 1)"
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, iD)
-	}
-	row := exec.QueryRowContext(ctx, sql, iD)
-
-	err := row.Scan(&exists)
-	if err != nil {
-		return false, errors.Wrap(err, "models: unable to check if m_user exists")
-	}
-
-	return exists, nil
-}
-
 var mySQLMUserUniqueColumns = []string{
 	"id",
 }
@@ -815,7 +648,7 @@ var mySQLMUserUniqueColumns = []string{
 // See boil.Columns documentation for how to properly use updateColumns and insertColumns.
 func (o *MUser) Upsert(ctx context.Context, exec boil.ContextExecutor, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
-		return errors.New("models: no m_user provided for upsert")
+		return errors.New("models: no m_users provided for upsert")
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
@@ -864,19 +697,20 @@ func (o *MUser) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 			mUserColumnsWithoutDefault,
 			nzDefaults,
 		)
+
 		update := updateColumns.UpdateColumnSet(
 			mUserAllColumns,
 			mUserPrimaryKeyColumns,
 		)
 
 		if !updateColumns.IsNone() && len(update) == 0 {
-			return errors.New("models: unable to upsert m_user, could not build update column list")
+			return errors.New("models: unable to upsert m_users, could not build update column list")
 		}
 
 		ret = strmangle.SetComplement(ret, nzUniques)
-		cache.query = buildUpsertQueryMySQL(dialect, "`m_user`", update, insert)
+		cache.query = buildUpsertQueryMySQL(dialect, "`m_users`", update, insert)
 		cache.retQuery = fmt.Sprintf(
-			"SELECT %s FROM `m_user` WHERE %s",
+			"SELECT %s FROM `m_users` WHERE %s",
 			strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, ret), ","),
 			strmangle.WhereClause("`", "`", 0, nzUniques),
 		)
@@ -908,7 +742,7 @@ func (o *MUser) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 	result, err := exec.ExecContext(ctx, cache.query, vals...)
 
 	if err != nil {
-		return errors.Wrap(err, "models: unable to upsert for m_user")
+		return errors.Wrap(err, "models: unable to upsert for m_users")
 	}
 
 	var lastID int64
@@ -931,7 +765,7 @@ func (o *MUser) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 
 	uniqueMap, err = queries.BindMapping(mUserType, mUserMapping, nzUniques)
 	if err != nil {
-		return errors.Wrap(err, "models: unable to retrieve unique values for m_user")
+		return errors.Wrap(err, "models: unable to retrieve unique values for m_users")
 	}
 	nzUniqueCols = queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), uniqueMap)
 
@@ -942,7 +776,7 @@ func (o *MUser) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 	}
 	err = exec.QueryRowContext(ctx, cache.retQuery, nzUniqueCols...).Scan(returns...)
 	if err != nil {
-		return errors.Wrap(err, "models: unable to populate default values for m_user")
+		return errors.Wrap(err, "models: unable to populate default values for m_users")
 	}
 
 CacheNoHooks:
@@ -953,4 +787,171 @@ CacheNoHooks:
 	}
 
 	return o.doAfterUpsertHooks(ctx, exec)
+}
+
+// Delete deletes a single MUser record with an executor.
+// Delete will match against the primary key column to find the record to delete.
+func (o *MUser) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
+	if o == nil {
+		return 0, errors.New("models: no MUser provided for delete")
+	}
+
+	if err := o.doBeforeDeleteHooks(ctx, exec); err != nil {
+		return 0, err
+	}
+
+	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), mUserPrimaryKeyMapping)
+	sql := "DELETE FROM `m_users` WHERE `id`=?"
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, sql)
+		fmt.Fprintln(writer, args...)
+	}
+	result, err := exec.ExecContext(ctx, sql, args...)
+	if err != nil {
+		return 0, errors.Wrap(err, "models: unable to delete from m_users")
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "models: failed to get rows affected by delete for m_users")
+	}
+
+	if err := o.doAfterDeleteHooks(ctx, exec); err != nil {
+		return 0, err
+	}
+
+	return rowsAff, nil
+}
+
+// DeleteAll deletes all matching rows.
+func (q mUserQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
+	if q.Query == nil {
+		return 0, errors.New("models: no mUserQuery provided for delete all")
+	}
+
+	queries.SetDelete(q.Query)
+
+	result, err := q.Query.ExecContext(ctx, exec)
+	if err != nil {
+		return 0, errors.Wrap(err, "models: unable to delete all from m_users")
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_users")
+	}
+
+	return rowsAff, nil
+}
+
+// DeleteAll deletes all rows in the slice, using an executor.
+func (o MUserSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
+	if len(o) == 0 {
+		return 0, nil
+	}
+
+	if len(mUserBeforeDeleteHooks) != 0 {
+		for _, obj := range o {
+			if err := obj.doBeforeDeleteHooks(ctx, exec); err != nil {
+				return 0, err
+			}
+		}
+	}
+
+	var args []interface{}
+	for _, obj := range o {
+		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mUserPrimaryKeyMapping)
+		args = append(args, pkeyArgs...)
+	}
+
+	sql := "DELETE FROM `m_users` WHERE " +
+		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mUserPrimaryKeyColumns, len(o))
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, sql)
+		fmt.Fprintln(writer, args)
+	}
+	result, err := exec.ExecContext(ctx, sql, args...)
+	if err != nil {
+		return 0, errors.Wrap(err, "models: unable to delete all from mUser slice")
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_users")
+	}
+
+	if len(mUserAfterDeleteHooks) != 0 {
+		for _, obj := range o {
+			if err := obj.doAfterDeleteHooks(ctx, exec); err != nil {
+				return 0, err
+			}
+		}
+	}
+
+	return rowsAff, nil
+}
+
+// Reload refetches the object from the database
+// using the primary keys with an executor.
+func (o *MUser) Reload(ctx context.Context, exec boil.ContextExecutor) error {
+	ret, err := FindMUser(ctx, exec, o.ID)
+	if err != nil {
+		return err
+	}
+
+	*o = *ret
+	return nil
+}
+
+// ReloadAll refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *MUserSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) error {
+	if o == nil || len(*o) == 0 {
+		return nil
+	}
+
+	slice := MUserSlice{}
+	var args []interface{}
+	for _, obj := range *o {
+		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mUserPrimaryKeyMapping)
+		args = append(args, pkeyArgs...)
+	}
+
+	sql := "SELECT `m_users`.* FROM `m_users` WHERE " +
+		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mUserPrimaryKeyColumns, len(*o))
+
+	q := queries.Raw(sql, args...)
+
+	err := q.Bind(ctx, exec, &slice)
+	if err != nil {
+		return errors.Wrap(err, "models: unable to reload all in MUserSlice")
+	}
+
+	*o = slice
+
+	return nil
+}
+
+// MUserExists checks if the MUser row exists.
+func MUserExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
+	var exists bool
+	sql := "select exists(select 1 from `m_users` where `id`=? limit 1)"
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, sql)
+		fmt.Fprintln(writer, iD)
+	}
+	row := exec.QueryRowContext(ctx, sql, iD)
+
+	err := row.Scan(&exists)
+	if err != nil {
+		return false, errors.Wrap(err, "models: unable to check if m_users exists")
+	}
+
+	return exists, nil
 }

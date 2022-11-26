@@ -1,0 +1,1 @@
+INSERT INTO `m_users` (name, age)values ("hoge", 33)

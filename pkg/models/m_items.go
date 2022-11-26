@@ -42,8 +42,8 @@ var MItemTableColumns = struct {
 	ID   string
 	Name string
 }{
-	ID:   "m_item.id",
-	Name: "m_item.name",
+	ID:   "m_items.id",
+	Name: "m_items.name",
 }
 
 // Generated where
@@ -98,8 +98,8 @@ var MItemWhere = struct {
 	ID   whereHelperint
 	Name whereHelperstring
 }{
-	ID:   whereHelperint{field: "`m_item`.`id`"},
-	Name: whereHelperstring{field: "`m_item`.`name`"},
+	ID:   whereHelperint{field: "`m_items`.`id`"},
+	Name: whereHelperstring{field: "`m_items`.`name`"},
 }
 
 // MItemRels is where relationship names are stored.
@@ -343,7 +343,7 @@ func (q mItemQuery) One(ctx context.Context, exec boil.ContextExecutor) (*MItem,
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "models: failed to execute a one query for m_item")
+		return nil, errors.Wrap(err, "models: failed to execute a one query for m_items")
 	}
 
 	if err := o.doAfterSelectHooks(ctx, exec); err != nil {
@@ -382,7 +382,7 @@ func (q mItemQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to count m_item rows")
+		return 0, errors.Wrap(err, "models: failed to count m_items rows")
 	}
 
 	return count, nil
@@ -398,7 +398,7 @@ func (q mItemQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool
 
 	err := q.Query.QueryRowContext(ctx, exec).Scan(&count)
 	if err != nil {
-		return false, errors.Wrap(err, "models: failed to check if m_item exists")
+		return false, errors.Wrap(err, "models: failed to check if m_items exists")
 	}
 
 	return count > 0, nil
@@ -406,10 +406,10 @@ func (q mItemQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool
 
 // MItems retrieves all the records using an executor.
 func MItems(mods ...qm.QueryMod) mItemQuery {
-	mods = append(mods, qm.From("`m_item`"))
+	mods = append(mods, qm.From("`m_items`"))
 	q := NewQuery(mods...)
 	if len(queries.GetSelect(q)) == 0 {
-		queries.SetSelect(q, []string{"`m_item`.*"})
+		queries.SetSelect(q, []string{"`m_items`.*"})
 	}
 
 	return mItemQuery{q}
@@ -425,7 +425,7 @@ func FindMItem(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from `m_item` where `id`=?", sel,
+		"select %s from `m_items` where `id`=?", sel,
 	)
 
 	q := queries.Raw(query, iD)
@@ -435,7 +435,7 @@ func FindMItem(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, sql.ErrNoRows
 		}
-		return nil, errors.Wrap(err, "models: unable to select from m_item")
+		return nil, errors.Wrap(err, "models: unable to select from m_items")
 	}
 
 	if err = mItemObj.doAfterSelectHooks(ctx, exec); err != nil {
@@ -449,7 +449,7 @@ func FindMItem(ctx context.Context, exec boil.ContextExecutor, iD int, selectCol
 // See boil.Columns.InsertColumnSet documentation to understand column list inference for inserts.
 func (o *MItem) Insert(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) error {
 	if o == nil {
-		return errors.New("models: no m_item provided for insertion")
+		return errors.New("models: no m_items provided for insertion")
 	}
 
 	var err error
@@ -482,15 +482,15 @@ func (o *MItem) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 			return err
 		}
 		if len(wl) != 0 {
-			cache.query = fmt.Sprintf("INSERT INTO `m_item` (`%s`) %%sVALUES (%s)%%s", strings.Join(wl, "`,`"), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
+			cache.query = fmt.Sprintf("INSERT INTO `m_items` (`%s`) %%sVALUES (%s)%%s", strings.Join(wl, "`,`"), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
 		} else {
-			cache.query = "INSERT INTO `m_item` () VALUES ()%s%s"
+			cache.query = "INSERT INTO `m_items` () VALUES ()%s%s"
 		}
 
 		var queryOutput, queryReturning string
 
 		if len(cache.retMapping) != 0 {
-			cache.retQuery = fmt.Sprintf("SELECT `%s` FROM `m_item` WHERE %s", strings.Join(returnColumns, "`,`"), strmangle.WhereClause("`", "`", 0, mItemPrimaryKeyColumns))
+			cache.retQuery = fmt.Sprintf("SELECT `%s` FROM `m_items` WHERE %s", strings.Join(returnColumns, "`,`"), strmangle.WhereClause("`", "`", 0, mItemPrimaryKeyColumns))
 		}
 
 		cache.query = fmt.Sprintf(cache.query, queryOutput, queryReturning)
@@ -507,7 +507,7 @@ func (o *MItem) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 	result, err := exec.ExecContext(ctx, cache.query, vals...)
 
 	if err != nil {
-		return errors.Wrap(err, "models: unable to insert into m_item")
+		return errors.Wrap(err, "models: unable to insert into m_items")
 	}
 
 	var lastID int64
@@ -538,7 +538,7 @@ func (o *MItem) Insert(ctx context.Context, exec boil.ContextExecutor, columns b
 	}
 	err = exec.QueryRowContext(ctx, cache.retQuery, identifierCols...).Scan(queries.PtrsFromMapping(value, cache.retMapping)...)
 	if err != nil {
-		return errors.Wrap(err, "models: unable to populate default values for m_item")
+		return errors.Wrap(err, "models: unable to populate default values for m_items")
 	}
 
 CacheNoHooks:
@@ -574,10 +574,10 @@ func (o *MItem) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 			wl = strmangle.SetComplement(wl, []string{"created_at"})
 		}
 		if len(wl) == 0 {
-			return 0, errors.New("models: unable to update m_item, could not build whitelist")
+			return 0, errors.New("models: unable to update m_items, could not build whitelist")
 		}
 
-		cache.query = fmt.Sprintf("UPDATE `m_item` SET %s WHERE %s",
+		cache.query = fmt.Sprintf("UPDATE `m_items` SET %s WHERE %s",
 			strmangle.SetParamNames("`", "`", 0, wl),
 			strmangle.WhereClause("`", "`", 0, mItemPrimaryKeyColumns),
 		)
@@ -597,12 +597,12 @@ func (o *MItem) Update(ctx context.Context, exec boil.ContextExecutor, columns b
 	var result sql.Result
 	result, err = exec.ExecContext(ctx, cache.query, values...)
 	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to update m_item row")
+		return 0, errors.Wrap(err, "models: unable to update m_items row")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by update for m_item")
+		return 0, errors.Wrap(err, "models: failed to get rows affected by update for m_items")
 	}
 
 	if !cached {
@@ -620,12 +620,12 @@ func (q mItemQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 
 	result, err := q.Query.ExecContext(ctx, exec)
 	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to update all for m_item")
+		return 0, errors.Wrap(err, "models: unable to update all for m_items")
 	}
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to retrieve rows affected for m_item")
+		return 0, errors.Wrap(err, "models: unable to retrieve rows affected for m_items")
 	}
 
 	return rowsAff, nil
@@ -658,7 +658,7 @@ func (o MItemSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := fmt.Sprintf("UPDATE `m_item` SET %s WHERE %s",
+	sql := fmt.Sprintf("UPDATE `m_items` SET %s WHERE %s",
 		strmangle.SetParamNames("`", "`", 0, colNames),
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mItemPrimaryKeyColumns, len(o)))
 
@@ -679,173 +679,6 @@ func (o MItemSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, co
 	return rowsAff, nil
 }
 
-// Delete deletes a single MItem record with an executor.
-// Delete will match against the primary key column to find the record to delete.
-func (o *MItem) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
-	if o == nil {
-		return 0, errors.New("models: no MItem provided for delete")
-	}
-
-	if err := o.doBeforeDeleteHooks(ctx, exec); err != nil {
-		return 0, err
-	}
-
-	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), mItemPrimaryKeyMapping)
-	sql := "DELETE FROM `m_item` WHERE `id`=?"
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, args...)
-	}
-	result, err := exec.ExecContext(ctx, sql, args...)
-	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to delete from m_item")
-	}
-
-	rowsAff, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by delete for m_item")
-	}
-
-	if err := o.doAfterDeleteHooks(ctx, exec); err != nil {
-		return 0, err
-	}
-
-	return rowsAff, nil
-}
-
-// DeleteAll deletes all matching rows.
-func (q mItemQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
-	if q.Query == nil {
-		return 0, errors.New("models: no mItemQuery provided for delete all")
-	}
-
-	queries.SetDelete(q.Query)
-
-	result, err := q.Query.ExecContext(ctx, exec)
-	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to delete all from m_item")
-	}
-
-	rowsAff, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_item")
-	}
-
-	return rowsAff, nil
-}
-
-// DeleteAll deletes all rows in the slice, using an executor.
-func (o MItemSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
-	if len(o) == 0 {
-		return 0, nil
-	}
-
-	if len(mItemBeforeDeleteHooks) != 0 {
-		for _, obj := range o {
-			if err := obj.doBeforeDeleteHooks(ctx, exec); err != nil {
-				return 0, err
-			}
-		}
-	}
-
-	var args []interface{}
-	for _, obj := range o {
-		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mItemPrimaryKeyMapping)
-		args = append(args, pkeyArgs...)
-	}
-
-	sql := "DELETE FROM `m_item` WHERE " +
-		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mItemPrimaryKeyColumns, len(o))
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, args)
-	}
-	result, err := exec.ExecContext(ctx, sql, args...)
-	if err != nil {
-		return 0, errors.Wrap(err, "models: unable to delete all from mItem slice")
-	}
-
-	rowsAff, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_item")
-	}
-
-	if len(mItemAfterDeleteHooks) != 0 {
-		for _, obj := range o {
-			if err := obj.doAfterDeleteHooks(ctx, exec); err != nil {
-				return 0, err
-			}
-		}
-	}
-
-	return rowsAff, nil
-}
-
-// Reload refetches the object from the database
-// using the primary keys with an executor.
-func (o *MItem) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindMItem(ctx, exec, o.ID)
-	if err != nil {
-		return err
-	}
-
-	*o = *ret
-	return nil
-}
-
-// ReloadAll refetches every row with matching primary key column values
-// and overwrites the original object slice with the newly updated slice.
-func (o *MItemSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) error {
-	if o == nil || len(*o) == 0 {
-		return nil
-	}
-
-	slice := MItemSlice{}
-	var args []interface{}
-	for _, obj := range *o {
-		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mItemPrimaryKeyMapping)
-		args = append(args, pkeyArgs...)
-	}
-
-	sql := "SELECT `m_item`.* FROM `m_item` WHERE " +
-		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mItemPrimaryKeyColumns, len(*o))
-
-	q := queries.Raw(sql, args...)
-
-	err := q.Bind(ctx, exec, &slice)
-	if err != nil {
-		return errors.Wrap(err, "models: unable to reload all in MItemSlice")
-	}
-
-	*o = slice
-
-	return nil
-}
-
-// MItemExists checks if the MItem row exists.
-func MItemExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
-	var exists bool
-	sql := "select exists(select 1 from `m_item` where `id`=? limit 1)"
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, iD)
-	}
-	row := exec.QueryRowContext(ctx, sql, iD)
-
-	err := row.Scan(&exists)
-	if err != nil {
-		return false, errors.Wrap(err, "models: unable to check if m_item exists")
-	}
-
-	return exists, nil
-}
-
 var mySQLMItemUniqueColumns = []string{
 	"id",
 }
@@ -854,7 +687,7 @@ var mySQLMItemUniqueColumns = []string{
 // See boil.Columns documentation for how to properly use updateColumns and insertColumns.
 func (o *MItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
-		return errors.New("models: no m_item provided for upsert")
+		return errors.New("models: no m_items provided for upsert")
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
@@ -903,19 +736,20 @@ func (o *MItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 			mItemColumnsWithoutDefault,
 			nzDefaults,
 		)
+
 		update := updateColumns.UpdateColumnSet(
 			mItemAllColumns,
 			mItemPrimaryKeyColumns,
 		)
 
 		if !updateColumns.IsNone() && len(update) == 0 {
-			return errors.New("models: unable to upsert m_item, could not build update column list")
+			return errors.New("models: unable to upsert m_items, could not build update column list")
 		}
 
 		ret = strmangle.SetComplement(ret, nzUniques)
-		cache.query = buildUpsertQueryMySQL(dialect, "`m_item`", update, insert)
+		cache.query = buildUpsertQueryMySQL(dialect, "`m_items`", update, insert)
 		cache.retQuery = fmt.Sprintf(
-			"SELECT %s FROM `m_item` WHERE %s",
+			"SELECT %s FROM `m_items` WHERE %s",
 			strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, ret), ","),
 			strmangle.WhereClause("`", "`", 0, nzUniques),
 		)
@@ -947,7 +781,7 @@ func (o *MItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 	result, err := exec.ExecContext(ctx, cache.query, vals...)
 
 	if err != nil {
-		return errors.Wrap(err, "models: unable to upsert for m_item")
+		return errors.Wrap(err, "models: unable to upsert for m_items")
 	}
 
 	var lastID int64
@@ -970,7 +804,7 @@ func (o *MItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 
 	uniqueMap, err = queries.BindMapping(mItemType, mItemMapping, nzUniques)
 	if err != nil {
-		return errors.Wrap(err, "models: unable to retrieve unique values for m_item")
+		return errors.Wrap(err, "models: unable to retrieve unique values for m_items")
 	}
 	nzUniqueCols = queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), uniqueMap)
 
@@ -981,7 +815,7 @@ func (o *MItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateCol
 	}
 	err = exec.QueryRowContext(ctx, cache.retQuery, nzUniqueCols...).Scan(returns...)
 	if err != nil {
-		return errors.Wrap(err, "models: unable to populate default values for m_item")
+		return errors.Wrap(err, "models: unable to populate default values for m_items")
 	}
 
 CacheNoHooks:
@@ -992,4 +826,171 @@ CacheNoHooks:
 	}
 
 	return o.doAfterUpsertHooks(ctx, exec)
+}
+
+// Delete deletes a single MItem record with an executor.
+// Delete will match against the primary key column to find the record to delete.
+func (o *MItem) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
+	if o == nil {
+		return 0, errors.New("models: no MItem provided for delete")
+	}
+
+	if err := o.doBeforeDeleteHooks(ctx, exec); err != nil {
+		return 0, err
+	}
+
+	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), mItemPrimaryKeyMapping)
+	sql := "DELETE FROM `m_items` WHERE `id`=?"
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, sql)
+		fmt.Fprintln(writer, args...)
+	}
+	result, err := exec.ExecContext(ctx, sql, args...)
+	if err != nil {
+		return 0, errors.Wrap(err, "models: unable to delete from m_items")
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "models: failed to get rows affected by delete for m_items")
+	}
+
+	if err := o.doAfterDeleteHooks(ctx, exec); err != nil {
+		return 0, err
+	}
+
+	return rowsAff, nil
+}
+
+// DeleteAll deletes all matching rows.
+func (q mItemQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
+	if q.Query == nil {
+		return 0, errors.New("models: no mItemQuery provided for delete all")
+	}
+
+	queries.SetDelete(q.Query)
+
+	result, err := q.Query.ExecContext(ctx, exec)
+	if err != nil {
+		return 0, errors.Wrap(err, "models: unable to delete all from m_items")
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_items")
+	}
+
+	return rowsAff, nil
+}
+
+// DeleteAll deletes all rows in the slice, using an executor.
+func (o MItemSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
+	if len(o) == 0 {
+		return 0, nil
+	}
+
+	if len(mItemBeforeDeleteHooks) != 0 {
+		for _, obj := range o {
+			if err := obj.doBeforeDeleteHooks(ctx, exec); err != nil {
+				return 0, err
+			}
+		}
+	}
+
+	var args []interface{}
+	for _, obj := range o {
+		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mItemPrimaryKeyMapping)
+		args = append(args, pkeyArgs...)
+	}
+
+	sql := "DELETE FROM `m_items` WHERE " +
+		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mItemPrimaryKeyColumns, len(o))
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, sql)
+		fmt.Fprintln(writer, args)
+	}
+	result, err := exec.ExecContext(ctx, sql, args...)
+	if err != nil {
+		return 0, errors.Wrap(err, "models: unable to delete all from mItem slice")
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "models: failed to get rows affected by deleteall for m_items")
+	}
+
+	if len(mItemAfterDeleteHooks) != 0 {
+		for _, obj := range o {
+			if err := obj.doAfterDeleteHooks(ctx, exec); err != nil {
+				return 0, err
+			}
+		}
+	}
+
+	return rowsAff, nil
+}
+
+// Reload refetches the object from the database
+// using the primary keys with an executor.
+func (o *MItem) Reload(ctx context.Context, exec boil.ContextExecutor) error {
+	ret, err := FindMItem(ctx, exec, o.ID)
+	if err != nil {
+		return err
+	}
+
+	*o = *ret
+	return nil
+}
+
+// ReloadAll refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *MItemSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor) error {
+	if o == nil || len(*o) == 0 {
+		return nil
+	}
+
+	slice := MItemSlice{}
+	var args []interface{}
+	for _, obj := range *o {
+		pkeyArgs := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(obj)), mItemPrimaryKeyMapping)
+		args = append(args, pkeyArgs...)
+	}
+
+	sql := "SELECT `m_items`.* FROM `m_items` WHERE " +
+		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, mItemPrimaryKeyColumns, len(*o))
+
+	q := queries.Raw(sql, args...)
+
+	err := q.Bind(ctx, exec, &slice)
+	if err != nil {
+		return errors.Wrap(err, "models: unable to reload all in MItemSlice")
+	}
+
+	*o = slice
+
+	return nil
+}
+
+// MItemExists checks if the MItem row exists.
+func MItemExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
+	var exists bool
+	sql := "select exists(select 1 from `m_items` where `id`=? limit 1)"
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, sql)
+		fmt.Fprintln(writer, iD)
+	}
+	row := exec.QueryRowContext(ctx, sql, iD)
+
+	err := row.Scan(&exists)
+	if err != nil {
+		return false, errors.Wrap(err, "models: unable to check if m_items exists")
+	}
+
+	return exists, nil
 }
