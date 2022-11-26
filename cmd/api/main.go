@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"golang-grpc-sqlboiler-mysql/pkg/server/models/command"
+	"golang-grpc-sqlboiler-mysql/pkg/command"
 )
 
 func main() {
