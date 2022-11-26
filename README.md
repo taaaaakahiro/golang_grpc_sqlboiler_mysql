@@ -33,7 +33,7 @@ $ grpcurl -plaintext -d '{"id": "1"}' localhost:8080 grpcapp.UserService.User
 $ cd ./pkg/proto
 $ protoc --go_out=../grpc --go_opt=paths=source_relative \
 	--go-grpc_out=../grpc --go-grpc_opt=paths=source_relative \
-	main.proto
+	user.proto
 ```
 
 ## Version
