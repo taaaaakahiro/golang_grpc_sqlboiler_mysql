@@ -45,7 +45,7 @@ func main() {
 }
 
 func User() {
-	fmt.Println("Please enter num.")
+	fmt.Println("Please enter userID.")
 	scanner.Scan()
 	text := scanner.Text()
 	id, _ := strconv.Atoi(text)
@@ -58,6 +58,6 @@ func User() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(res.Name)
+		fmt.Printf("ID:%d, Name:%s, Age:%d", res.Id, res.Name, res.Age)
 	}
 }
