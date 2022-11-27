@@ -2,17 +2,21 @@ package server
 
 import (
 	"context"
+	"database/sql"
 	grpcpb "golang-grpc-sqlboiler-mysql/pkg/grpc"
-	"strconv"
 
 	"github.com/friendsofgo/errors"
 )
 
 func (s *Server) User(ctx context.Context, req *grpcpb.UserRequest) (*grpcpb.UserResponse, error) {
-	id, _ := strconv.Atoi(req.Id)
-	user, err := s.repo.User.GetUser(id)
+	user, err := s.repo.User.GetUser(int(req.Id))
 	if err != nil {
-		return nil, errors.WithStack(err)
+		switch err {
+		case sql.ErrNoRows:
+			return nil, nil
+		default:
+			return nil, errors.WithStack(err)
+		}
 	}
 
 	return &grpcpb.UserResponse{
