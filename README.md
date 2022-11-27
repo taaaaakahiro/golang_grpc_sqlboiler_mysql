@@ -1,7 +1,7 @@
 # golang-grpc-sqlboiler-mysql
 
 ## Procedure
-1. Init Path
+1. init path
 ```
 $ export PATH="$PATH:$(go env GOPATH)/bin"
 ```
