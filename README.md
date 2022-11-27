@@ -5,6 +5,8 @@
 1. init path $ set environment
 ```
 $ export PATH="$PATH:$(go env GOPATH)/bin"
+$ export PORT=< grpc server port >
+$ export MYSQL_DSN=< mysql dsn >
 
 ```
 
