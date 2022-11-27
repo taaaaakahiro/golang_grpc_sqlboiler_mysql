@@ -26,9 +26,10 @@ func main() {
 	scanner = bufio.NewScanner(os.Stdin)
 
 	// 2. gRPCサーバーとのコネクションを確立
-	address := "localhost:8080"
+	p := os.Getenv("PORT")
+	host := fmt.Sprintf("localhost:%s", p)
 	conn, err := grpc.Dial(
-		address,
+		host,
 
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),

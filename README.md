@@ -2,9 +2,10 @@
 
 ## Procedure
 - 1 → 2 → 3 or 4
-1. init path
+1. init path $ set environment
 ```
 $ export PATH="$PATH:$(go env GOPATH)/bin"
+
 ```
 
 2. run server
@@ -27,11 +28,12 @@ $ grpcurl -plaintext -d '{"id": 1}' localhost:8080 grpcapp.UserService.User
   "age": 11
 }
 ```
+
 4. http request from grpc client
 ```
 $ cd .
 $ make client
-``` 
+```
 
 ## Generate Protocol Buffer
 ```
