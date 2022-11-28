@@ -21,14 +21,41 @@ $ grpcurl -plaintext localhost:8080 list // list service
 $ grpcurl -plaintext localhost:8080 list grpcapp.UserService // list method
 ```
 ```json
-// request
+// 1. Unary
 $ grpcurl -plaintext -d '{"id": 1}' localhost:8080 grpcapp.UserService.User
-// response
+// res
 {
   "id": 1,
   "name": "user1",
   "age": 11
 }
+// 2. Server Streaming
+$ grpcurl -plaintext -d '{"id": 1}' localhost:8080 grpcapp.UserService.UserServerStream
+// res
+{
+  "id": 1,
+  "name": "user1",
+  "age": 11
+}
+{
+  "id": 2,
+  "name": "user2",
+  "age": 22
+}
+{
+  "id": 3,
+  "name": "user3",
+  "age": 33
+}
+{
+  "id": 4,
+  "name": "user4",
+  "age": 44
+}
+// 3. Client Streaming
+
+// 4. Bidirectional Streaming
+
 ```
 
 4. http request from grpc client

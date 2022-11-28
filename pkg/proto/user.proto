@@ -5,7 +5,8 @@ option go_package = "pkg/grpc";
 package grpcapp;
 
 service UserService {
-	rpc User (UserRequest) returns (UserResponse); 
+	rpc User (UserRequest) returns (UserResponse);
+	rpc UserServerStream (UserRequest) returns (stream UserResponse);
 }
 
 message UserRequest {

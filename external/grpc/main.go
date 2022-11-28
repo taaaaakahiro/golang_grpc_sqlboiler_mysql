@@ -46,7 +46,7 @@ func main() {
 }
 
 func User() {
-	fmt.Println("Please enter userID.")
+	fmt.Println("Please enter userID(#1~4)")
 	scanner.Scan()
 	text := scanner.Text()
 	id, _ := strconv.Atoi(text)
