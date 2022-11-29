@@ -53,7 +53,22 @@ $ grpcurl -plaintext -d '{"id": 1}' localhost:8080 grpcapp.UserService.UserServe
   "age": 44
 }
 // 3. Client Streaming
-
+$ grpcurl -plaintext -d '{"id": 1}{"id": 2}' localhost:8080 grpcapp.UserService.UserClientStream
+// res
+{
+  "user": [
+    {
+      "id": 1,
+      "name": "user1",
+      "age": 11
+    },
+    {
+      "id": 2,
+      "name": "user2",
+      "age": 22
+    }
+  ]
+}
 // 4. Bidirectional Streaming
 
 ```

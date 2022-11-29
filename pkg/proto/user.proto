@@ -7,6 +7,15 @@ package grpcapp;
 service UserService {
 	rpc User (UserRequest) returns (UserResponse);
 	rpc UserServerStream (UserRequest) returns (stream UserResponse);
+	rpc UserClientStream (stream UserRequest) returns (UserResponse);
+	rpc UserBidirectStream (stream UserRequest) returns (stream UserResponse);
+}
+
+message User {
+	int32 id = 1;
+	string name = 2;
+	int32 age = 3;
+
 }
 
 message UserRequest {
@@ -17,4 +26,5 @@ message UserResponse {
 	int32 id = 1;
 	string name = 2;
 	int32 age = 3;
+	repeated User user = 4; 
 }
