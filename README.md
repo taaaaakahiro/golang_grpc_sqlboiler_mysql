@@ -74,10 +74,23 @@ $ grpcurl -plaintext -d '{"id": 1}{"id": 2}' localhost:8080 grpcapp.UserService.
 ```
 
 4. http request from grpc client
-```
-$ cd .
-$ make client
-```
+	1. run
+	```
+	$ cd .
+	$ make client
+	```
+	2. input number(1:Unary, 2:ClientStream)
+	3. input four numbers(id) & enter
+	```
+	// example input #1~4
+	[
+		id:1 name:"user1" age:11
+		id:2 name:"user2" age:22
+		id:3 name:"user3" age:33
+		id:4 name:"user4" age:44
+	]
+
+	```
 
 ## regenerate by Protocol Buffer
 ```
