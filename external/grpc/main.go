@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -40,7 +42,7 @@ func main() {
 	// 2. generate gRPC client
 	client = grpcpb.NewUserServiceClient(conn)
 
-	fmt.Println("Please enter number(1:Unariy, 2:ClientStream)")
+	fmt.Println("Please enter number(1:Unariy, 2:ClientStream, 3:BidirectionStream)")
 	scanner = bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	text := scanner.Text()
@@ -49,7 +51,8 @@ func main() {
 		UnaryUser()
 	case "2":
 		ClientStreamUser()
-
+	case "3":
+		BidirectionStreamsUser()
 	}
 
 }
@@ -103,5 +106,57 @@ func ClientStreamUser() {
 		fmt.Println(err)
 	} else {
 		fmt.Println(res.GetUser())
+	}
+}
+
+func BidirectionStreamsUser() {
+	stream, err := client.UserBidirectStream(context.Background())
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	sendNum := 4
+	fmt.Printf("Please enter %d numbers.\n", sendNum)
+
+	var sendEnd, recvEnd bool
+	sendCount := 0
+	for !(sendEnd && recvEnd) {
+		// send
+		if !sendEnd {
+			scanner.Scan()
+			inputNumber := scanner.Text()
+			id, err := strconv.Atoi(inputNumber)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			sendCount++
+			if err := stream.Send(&grpcpb.UserRequest{
+				Id: int32(id),
+			}); err != nil {
+				fmt.Println(err)
+				sendEnd = true
+			}
+
+			if sendCount == sendNum {
+				sendEnd = true
+				if err := stream.CloseSend(); err != nil {
+					fmt.Println(err)
+				}
+			}
+		}
+
+		// receive
+		if !recvEnd {
+			if res, err := stream.Recv(); err != nil {
+				if !errors.Is(err, io.EOF) {
+					fmt.Println(err)
+				}
+				recvEnd = true
+			} else {
+				fmt.Printf("id:%d,name:%s,age:%d\n", res.GetId(), res.GetName(), res.GetAge())
+			}
+		}
 	}
 }

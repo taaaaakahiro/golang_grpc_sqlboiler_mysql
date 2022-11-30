@@ -70,7 +70,18 @@ $ grpcurl -plaintext -d '{"id": 1}{"id": 2}' localhost:8080 grpcapp.UserService.
   ]
 }
 // 4. Bidirectional Streaming
-
+$ grpcurl -plaintext -d '{"id": 1}{"id": 2}' localhost:8080 grpcapp.UserService.UserBidirectStream
+// res
+{
+  "id": 1,
+  "name": "user1",
+  "age": 11
+}
+{
+  "id": 2,
+  "name": "user2",
+  "age": 22
+}
 ```
 
 4. http request from grpc client
@@ -79,18 +90,29 @@ $ grpcurl -plaintext -d '{"id": 1}{"id": 2}' localhost:8080 grpcapp.UserService.
 	$ cd .
 	$ make client
 	```
-	2. input number(1:Unary, 2:ClientStream)
+	2. input number(1:Unary, 2:ClientStream,3:BidirecrionStream)
 	3. input four numbers(id) & enter
-	```
-	// example input #1~4
-	[
-		id:1 name:"user1" age:11
-		id:2 name:"user2" age:22
-		id:3 name:"user3" age:33
-		id:4 name:"user4" age:44
-	]
-
-	```
+	 - #2 ClientStream
+		```
+		// example input #1~4
+		[
+			id:1 name:"user1" age:11
+			id:2 name:"user2" age:22
+			id:3 name:"user3" age:33
+			id:4 name:"user4" age:44
+		]
+		```
+	 - #3 BidirecrionStream
+		```
+		1
+		id:1,name:user1,age:11
+		2
+		id:2,name:user2,age:22
+		3
+		id:3,name:user3,age:33
+		4
+		id:4,name:user4,age:44
+		```
 
 ## regenerate by Protocol Buffer
 ```

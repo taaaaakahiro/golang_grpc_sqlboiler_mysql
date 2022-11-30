@@ -79,5 +79,26 @@ func (s *Server) UserClientStream(stream grpcpb.UserService_UserClientStreamServ
 }
 
 func (s *Server) UserBidirectStream(stream grpcpb.UserService_UserBidirectStreamServer) error {
-	return nil
+	for {
+		req, err := stream.Recv()
+		if errors.Is(err, io.EOF) {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+
+		user, err := s.repo.User.GetUser(int(req.Id))
+		if err != nil {
+			return err
+		}
+
+		if err := stream.Send(&grpcpb.UserResponse{
+			Id:   int32(user.ID),
+			Name: user.Name,
+			Age:  int32(user.Age),
+		}); err != nil {
+			return err
+		}
+	}
 }
