@@ -86,10 +86,10 @@ $ grpcurl -plaintext -d '{"id": 1}{"id": 2}' localhost:8080 grpcapp.UserService.
 
 4. http request from grpc client
 	1. run
-	```
-	$ cd .
-	$ make client
-	```
+		```
+		$ cd .
+		$ make client
+		```
 	2. input number(1:Unary, 2:ClientStream,3:BidirecrionStream)
 	3. input four numbers(id) & enter
 	 - #2 ClientStream
