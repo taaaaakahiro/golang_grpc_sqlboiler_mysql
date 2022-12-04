@@ -1,21 +1,24 @@
 # golang-grpc-sqlboiler-mysql
 
 ## Procedure
-- 1 → 2 → 3 or 4
-1. init path $ set environment
+- 1 → 2 → 3 → 4 or 5
+1. init path
 ```
-$ export PATH="$PATH:$(go env GOPATH)/bin"
+$ export PATH="$PATH:$(go env GOPATH)/bin" >> ~/.zshrc
+
+```
+2. init env
+```
 $ export PORT=< grpc server port >
 $ export MYSQL_DSN=< mysql dsn >
-
 ```
 
-2. run server
+3. run server
 ```
 $ make run
 ```
 
-3. http request/grpcurl ~ on runnning grpc server ~
+4. http request/grpcurl ~ on runnning grpc server ~
 ```
 $ grpcurl -plaintext localhost:8080 list // list service
 $ grpcurl -plaintext localhost:8080 list grpcapp.UserService // list method
@@ -83,8 +86,7 @@ $ grpcurl -plaintext -d '{"id": 1}{"id": 2}' localhost:8080 grpcapp.UserService.
   "age": 22
 }
 ```
-
-4. http request from grpc client
+5. http request from grpc client
 	1. run
 		```
 		$ cd .
